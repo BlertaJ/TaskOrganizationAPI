@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
 {
@@ -11,7 +12,7 @@ namespace Infrastructure
             _context = context;
         }
 
-        public async Task InitialiseAsync()
+        public async System.Threading.Tasks.Task InitialiseAsync()
         {
             try
             {
@@ -25,7 +26,7 @@ namespace Infrastructure
                 throw;
             }
         }
-        public async Task SeedAsync()
+        public async System.Threading.Tasks.Task SeedAsync()
         {
             try
             {
@@ -37,26 +38,26 @@ namespace Infrastructure
             }
         }
 
-        public async Task TrySeedAsync()
+        public async System.Threading.Tasks.Task TrySeedAsync()
         {
             // Default roles
             // Seed, if necessary
-            //if (!_context.EmployeeRole.Any())
-            //{
-            //    _context.EmployeeRole.AddRange(
-            //        new EmployeeRole
-            //        {
-            //            Name = "Employee",
-            //        }, new EmployeeRole
-            //        {
-            //            Name = "Manager",
-            //        }, new EmployeeRole
-            //        {
-            //            Name = "DepartmentLead",
-            //        });
+            if (!_context.Status.Any())
+            {
+                _context.Status.AddRange(
+                    new Status
+                    {
+                        Name = "Active",
+                    }, new Status
+                    {
+                        Name = "OnGoing",
+                    }, new Status
+                    {
+                        Name = "Completed",
+                    });
 
-            //    await _context.SaveChangesAsync();
-            //}
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
