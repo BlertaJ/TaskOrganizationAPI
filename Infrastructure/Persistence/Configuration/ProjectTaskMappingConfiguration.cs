@@ -13,13 +13,13 @@ namespace Infrastructure.Persistence.Configuration
             builder.HasOne(x => x.Project)
                 .WithMany()
                 .HasForeignKey(z => z.ProjectId)
-                .OnDelete(DeleteBehavior.Cascade)
+                //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
             builder.HasOne(x => x.Task)
                 .WithMany()
                 .HasForeignKey(z => z.TaskId)
-                .OnDelete(DeleteBehavior.Cascade)
+                //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
         }
     }

@@ -29,6 +29,11 @@ namespace Infrastructure
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
