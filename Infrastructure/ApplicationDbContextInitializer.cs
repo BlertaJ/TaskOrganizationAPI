@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Status;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -48,12 +48,15 @@ namespace Infrastructure
                     new Status
                     {
                         Name = "Active",
+                        Description = "Is Active"
                     }, new Status
                     {
                         Name = "OnGoing",
+                        Description = "Is OnGoing"
                     }, new Status
                     {
                         Name = "Completed",
+                        Description = "Is Completed"
                     });
 
                 await _context.SaveChangesAsync();

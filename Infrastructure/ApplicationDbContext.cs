@@ -1,5 +1,9 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Entities.Project;
+using Domain.Entities.Status;
+using Domain.Entities.Task;
+using Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -20,7 +24,7 @@ namespace Infrastructure
         public DbSet<UserTaskMapping> UserTaskMapping => Set<UserTaskMapping>();
         public DbSet<Project> Project => Set<Project>();
         public DbSet<ProjectTaskMapping> ProjectTaskMapping => Set<ProjectTaskMapping>();
-        public DbSet<Domain.Entities.Task> Task => Set<Domain.Entities.Task>();
+        public DbSet<Domain.Entities.Task.Task> Task => Set<Domain.Entities.Task.Task>();
         public DbSet<Status> Status => Set<Status>();
         public DbSet<UserProjectMapping> UserProjectMapping => Set<UserProjectMapping>();
 

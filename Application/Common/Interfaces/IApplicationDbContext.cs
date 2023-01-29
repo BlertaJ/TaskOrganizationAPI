@@ -1,4 +1,7 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Project;
+using Domain.Entities.Status;
+using Domain.Entities.Task;
+using Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces
@@ -9,7 +12,7 @@ namespace Application.Common.Interfaces
         public DbSet<UserTaskMapping> UserTaskMapping { get; }
         public DbSet<Project> Project { get; }
         public DbSet<ProjectTaskMapping> ProjectTaskMapping { get; }
-        public DbSet<Domain.Entities.Task> Task { get; }
+        public DbSet<Domain.Entities.Task.Task> Task { get; }
         public DbSet<Status> Status { get; }
         public DbSet<UserProjectMapping> UserProjectMapping { get; }
 

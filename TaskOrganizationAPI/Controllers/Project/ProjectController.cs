@@ -1,5 +1,5 @@
 ﻿using Application.Common.Management.Queries;
-using Domain.Entities;
+using Domain.Entities.Project;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TaskOrganizationAPI.Controllers
