@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.Task
+﻿using Domain.Common;
+
+namespace Domain.Entities.Task
 {
-    public class UserTaskMapping : MainEntity
+    public class UserTaskMapping : BaseAuditableEntity
     {
         public int UserId { get; set; }
         public int TaskId { get; set; }

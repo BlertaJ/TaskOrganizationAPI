@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.Project
+﻿using Domain.Common;
+
+namespace Domain.Entities.Project
 {
-    public class Project : MainEntity
+    public class Project : BaseAuditableEntity
     {
         public string Title { get; set; }
         public string Description { get; set; }

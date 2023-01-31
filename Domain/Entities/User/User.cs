@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.User
+﻿using Domain.Common;
+
+namespace Domain.Entities.User
 {
-    public class User : MainEntity
+    public class User : BaseAuditableEntity
     {
         public string UserName { get; set; }
         public string Position { get; set; }

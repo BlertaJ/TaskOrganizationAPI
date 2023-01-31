@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.Task
+﻿using Domain.Common;
+
+namespace Domain.Entities.Task
 {
-    public class Task : MainEntity
+    public class Task : BaseAuditableEntity
     {
         public int ProjectId { get; set; }
         public string Title { get; set; }
