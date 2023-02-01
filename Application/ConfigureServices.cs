@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Application.Common.Interfaces.ProjectInterfaces;
+using Application.Services.Project;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,7 +11,7 @@ namespace Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
-
+            services.AddScoped<IProjectService, ProjectService>();
             return services;
         }
     }

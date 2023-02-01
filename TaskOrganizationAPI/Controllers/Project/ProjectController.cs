@@ -14,9 +14,9 @@ namespace TaskOrganizationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Project>>> Index([FromBody] CreateProjectCommand request)
+        public async Task<ActionResult<List<Project>>> Index([FromBody] CreateProjectDto productDto)
         {
-            var project = await Mediator.Send(new CreateProjectCommand());
+            var project = await Mediator.Send(new CreateProjectCommand(productDto));
 
             return Ok(project);
         }
