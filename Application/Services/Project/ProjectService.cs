@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Interfaces.ProjectInterfaces;
+using Application.Common.Interfaces.StatusInterfaces;
 using Application.Common.Management.Project.Commands;
 using Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,16 @@ namespace Application.Services.Project
     public class ProjectService : IProjectService
     {
         private readonly IApplicationDbContext _dbContext;
-        public ProjectService(IApplicationDbContext dbContext)
+        private readonly IStatusService _statusService;
+        public ProjectService(IApplicationDbContext dbContext,
+            IStatusService statusService)
         {
             _dbContext = dbContext;
+            _statusService = statusService;
         }
         public async Task<Domain.Entities.Project.Project> GetProjectStatus(CreateProjectDto projectDto, Domain.Entities.Project.Project project)
         {
-            var statuses = await _dbContext.Status.ToListAsync();
-            if (statuses.Select(x => x.Name).Contains(projectDto.Status))
-                project.StatusId = statuses.Where(x => x.Name == projectDto.Status).FirstOrDefault().Id;
-
+            project.StatusId = await _statusService.GetStatusId(projectDto.Status);
             return project;
         }
 
@@ -31,7 +32,7 @@ namespace Application.Services.Project
             {
                 if (userMembersDetails.Select(x => x.UserName).Contains(projectMember.UserName))
                 {
-                    
+
                     project.Users
                         .Add(new User
                         {

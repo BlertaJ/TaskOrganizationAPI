@@ -1,35 +1,42 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Interfaces.ProjectInterfaces;
+using Application.Common.Interfaces.TaskInterfaces;
 using MediatR;
 
 namespace Application.Common.Management.Task.Commands
 {
-    public record CreateTaskCommand(CreateTaskDto Task) : IRequest<Domain.Entities.Task.Task>;
+    public record CreateTaskCommand(CreateTaskDto Task) : IRequest<int>;
 
-    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Domain.Entities.Task.Task>
+    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, int>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IProjectService _projectService;
+        private readonly ITaskService _taskService;
         public CreateTaskCommandHandler(IApplicationDbContext context,
-            IProjectService projectService)
+            ITaskService taskService)
         {
             _context = context;
-            _projectService = projectService;
-
+            _taskService = taskService;
         }
-        public async Task<Domain.Entities.Task.Task> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
             var task = new Domain.Entities.Task.Task
             {
                 Title = request.Task.Title,
                 Description = request.Task.Description,
-                Progress = request.Task.Progress
+                Progress = request.Task.Progress,
+                ProjectId = request.Task.ProjectId
             };
+
+            task = await _taskService.GetTaskStatus(request.Task, task);
 
             var insertedProject = await _context.Task.AddAsync(task);
 
             await _context.SaveChangesAsync();
-            return insertedProject.Entity;
+
+            task = await _taskService.GetTaskMembers(request.Task, task);
+
+            await _context.SaveChangesAsync();
+
+            return insertedProject.Entity.Id;
         }
     }
 }
