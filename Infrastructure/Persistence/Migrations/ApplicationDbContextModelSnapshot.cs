@@ -69,62 +69,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("TaskId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOnDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("ProjectId", "TaskId");
 
                     b.HasIndex("TaskId");
 
                     b.ToTable("ProjectTaskMapping");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Project.UserProjectMapping", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProjectMapping");
                 });
 
             modelBuilder.Entity("Domain.Entities.Status.Status", b =>
@@ -197,51 +146,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedOnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Task");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Task.UserTaskMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserTaskMapping");
                 });
 
             modelBuilder.Entity("Domain.Entities.User.User", b =>
@@ -262,9 +171,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -277,9 +183,37 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
-
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ProjectUser", b =>
+                {
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ProjectUser");
+                });
+
+            modelBuilder.Entity("TaskUser", b =>
+                {
+                    b.Property<int>("TasksId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TasksId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("TaskUser");
                 });
 
             modelBuilder.Entity("Domain.Entities.Project.ProjectTaskMapping", b =>
@@ -301,25 +235,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Task");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Project.UserProjectMapping", b =>
-                {
-                    b.HasOne("Domain.Entities.Project.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Entities.Task.Task", b =>
                 {
                     b.HasOne("Domain.Entities.Project.Project", "Project")
@@ -328,48 +243,41 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Project");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Task.UserTaskMapping", b =>
-                {
-                    b.HasOne("Domain.Entities.Task.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.User.User", b =>
+            modelBuilder.Entity("ProjectUser", b =>
                 {
                     b.HasOne("Domain.Entities.Project.Project", null)
-                        .WithMany("Members")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskUser", b =>
+                {
+                    b.HasOne("Domain.Entities.Task.Task", null)
+                        .WithMany()
+                        .HasForeignKey("TasksId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Project.Project", b =>
                 {
-                    b.Navigation("Members");
-
                     b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618

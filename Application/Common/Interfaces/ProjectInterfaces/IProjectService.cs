@@ -5,5 +5,6 @@ namespace Application.Common.Interfaces.ProjectInterfaces
     public interface IProjectService
     {
         public Task<Domain.Entities.Project.Project> GetProjectStatus(CreateProjectDto projectDto, Domain.Entities.Project.Project project);
+        public Task<Domain.Entities.Project.Project> GetProjectMembers(CreateProjectDto projectDto, Domain.Entities.Project.Project project);
     }
 }

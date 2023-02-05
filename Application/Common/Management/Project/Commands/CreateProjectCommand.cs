@@ -1,12 +1,13 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Interfaces.ProjectInterfaces;
+using Domain.Entities.User;
 using MediatR;
 
 namespace Application.Common.Management.Project.Commands
 {
-    public record CreateProjectCommand(CreateProjectDto Project) : IRequest<Domain.Entities.Project.Project>;
+    public record CreateProjectCommand(CreateProjectDto Project) : IRequest<int>;
 
-    public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, Domain.Entities.Project.Project>
+    public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, int>
     {
         private readonly IApplicationDbContext _context;
         private readonly IProjectService _projectService;
@@ -16,7 +17,7 @@ namespace Application.Common.Management.Project.Commands
             _context = context;
             _projectService = projectService;
         }
-        public async Task<Domain.Entities.Project.Project> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
             var project = new Domain.Entities.Project.Project
             {
@@ -30,7 +31,12 @@ namespace Application.Common.Management.Project.Commands
             var insertedProject = await _context.Project.AddAsync(project);
 
             await _context.SaveChangesAsync();
-            return insertedProject.Entity;
+
+            project = await _projectService.GetProjectMembers(request.Project, project);
+
+            await _context.SaveChangesAsync();
+
+            return insertedProject.Entity.Id;
         }
     }
 }

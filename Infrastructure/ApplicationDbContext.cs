@@ -21,12 +21,9 @@ namespace Infrastructure
 
 
         public DbSet<User> User => Set<User>();
-        public DbSet<UserTaskMapping> UserTaskMapping => Set<UserTaskMapping>();
         public DbSet<Project> Project => Set<Project>();
-        public DbSet<ProjectTaskMapping> ProjectTaskMapping => Set<ProjectTaskMapping>();
         public DbSet<Domain.Entities.Task.Task> Task => Set<Domain.Entities.Task.Task>();
         public DbSet<Status> Status => Set<Status>();
-        public DbSet<UserProjectMapping> UserProjectMapping => Set<UserProjectMapping>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

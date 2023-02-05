@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration2 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,8 +20,11 @@ namespace Infrastructure.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Progress = table.Column<double>(type: "float", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    CreatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,7 +38,11 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,17 +57,14 @@ namespace Infrastructure.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: true)
+                    CreatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_User_Project_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Project",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,8 +77,11 @@ namespace Infrastructure.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Progress = table.Column<double>(type: "float", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    CreatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedOnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,35 +92,27 @@ namespace Infrastructure.Persistence.Migrations
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Task_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProjectMapping",
+                name: "ProjectUser",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    ProjectsId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProjectMapping", x => new { x.ProjectId, x.UserId });
+                    table.PrimaryKey("PK_ProjectUser", x => new { x.ProjectsId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_UserProjectMapping_Project_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_ProjectUser_Project_ProjectsId",
+                        column: x => x.ProjectsId,
                         principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserProjectMapping_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_ProjectUser_User_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -124,9 +123,7 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     ProjectId = table.Column<int>(type: "int", nullable: false),
-                    TaskId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    TaskId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,26 +143,24 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTaskMapping",
+                name: "TaskUser",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    TaskId = table.Column<int>(type: "int", nullable: false)
+                    TasksId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTaskMapping", x => x.Id);
+                    table.PrimaryKey("PK_TaskUser", x => new { x.TasksId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_UserTaskMapping_Task_TaskId",
-                        column: x => x.TaskId,
+                        name: "FK_TaskUser_Task_TasksId",
+                        column: x => x.TasksId,
                         principalTable: "Task",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserTaskMapping_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_TaskUser_User_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -177,34 +172,19 @@ namespace Infrastructure.Persistence.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectUser_UsersId",
+                table: "ProjectUser",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Task_ProjectId",
                 table: "Task",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Task_UserId",
-                table: "Task",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ProjectId",
-                table: "User",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProjectMapping_UserId",
-                table: "UserProjectMapping",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTaskMapping_TaskId",
-                table: "UserTaskMapping",
-                column: "TaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTaskMapping_UserId",
-                table: "UserTaskMapping",
-                column: "UserId");
+                name: "IX_TaskUser_UsersId",
+                table: "TaskUser",
+                column: "UsersId");
         }
 
         /// <inheritdoc />
@@ -214,13 +194,13 @@ namespace Infrastructure.Persistence.Migrations
                 name: "ProjectTaskMapping");
 
             migrationBuilder.DropTable(
+                name: "ProjectUser");
+
+            migrationBuilder.DropTable(
                 name: "Status");
 
             migrationBuilder.DropTable(
-                name: "UserProjectMapping");
-
-            migrationBuilder.DropTable(
-                name: "UserTaskMapping");
+                name: "TaskUser");
 
             migrationBuilder.DropTable(
                 name: "Task");

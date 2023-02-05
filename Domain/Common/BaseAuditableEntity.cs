@@ -4,12 +4,12 @@ namespace Domain.Common
 {
     public class BaseAuditableEntity : MainEntity
     {
-        public DateTime CreatedOnDate { get; set; }
+        public DateTime CreatedOnDate { get; set; } = DateTime.UtcNow;
 
-        public string? CreatedBy { get; set; }
+        public string? CreatedBy { get; set; } = "blerta";
 
-        public DateTime? UpdatedOnDate { get; set; }
+        public DateTime? UpdatedOnDate { get; set; } = DateTime.UtcNow;
 
-        public string? UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; } = "blerta";
     }
 }
