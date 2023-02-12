@@ -1,4 +1,5 @@
-﻿using Application.Common.Management.User.Commands;
+﻿using Application.Common.Management;
+using Application.Common.Management.User.Commands;
 using Application.Common.Management.User.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,7 @@ namespace TaskOrganizationAPI.Controllers.User
     public class UserController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Domain.Entities.User.User>>> Index([FromQuery] GetUsersQuery query)
+        public async Task<ActionResult<TaskManagementResponseModel<UserStateDto>>> Index([FromQuery] GetUsersQuery query)
         {
             return await Mediator.Send(query);
         }
